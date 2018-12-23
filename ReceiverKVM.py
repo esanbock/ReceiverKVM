@@ -2,7 +2,7 @@ import sys
 import usb
 import usb.core
 import usb.util
-
+import Receiver
 
 class find_class(object):
     def __init__(self, class_):
@@ -26,12 +26,15 @@ class find_class(object):
         return False
 
 
+
 def main(argv):
     print("yo")
     #devs = usb.core.find(find_all=1)
     devs = usb.core.find(find_all=1, custom_match=find_class(9))
     for result in devs:
         print(result)
+    r = Receiver.receiver("127.0.0.1")
+    r.change_source("AUX1")
     print("done")
 
 if __name__ == "__main__":
