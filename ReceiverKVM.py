@@ -2,7 +2,7 @@ import sys
 import usb
 import usb.core
 import usb.util
-import Receiver
+import MarantzReceiver
 
 class find_class(object):
     def __init__(self, class_):
@@ -33,7 +33,7 @@ def main(argv):
     devs = usb.core.find(find_all=1, custom_match=find_class(9))
     for result in devs:
         print(result)
-    r = Receiver.receiver("127.0.0.1")
+    r = MarantzReceiver.marantz_receiver("192.168.1.131")
     r.change_source("AUX1")
     print("done")
 
