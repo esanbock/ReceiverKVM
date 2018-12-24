@@ -34,7 +34,7 @@ def main(argv):
     for result in devs:
         print(result)
     r = MarantzReceiver.marantz_receiver("192.168.1.131")
-    r.change_source("AUX1")
+#    r.change_source("AUX1")
     print("done")
 
 if __name__ == "__main__":
