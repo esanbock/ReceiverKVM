@@ -36,6 +36,7 @@ def main(argv):
     r = MarantzReceiver.marantz_receiver("192.168.1.131")
 
     print("power status = " + str(r.get_power()))
+    print("current source = " + r.get_source())
 #   r.change_source("AUX1")
     print("done")
 

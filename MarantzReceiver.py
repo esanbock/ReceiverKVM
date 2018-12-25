@@ -42,6 +42,7 @@ class marantz_receiver(Receiver.receiver):
 
     def change_source(self, source):
         print("changing source to " + source)
+        send("SI" + source)
 
     def get_power(self):
         self.send('PW?')
@@ -53,3 +54,8 @@ class marantz_receiver(Receiver.receiver):
             return 0
 
         raise Exception("I don't understand the response")
+
+    def get_source(self):
+        self.send("SI?")
+        source = self.receive()
+        return source[0]
