@@ -1,6 +1,7 @@
 import sys
 import MarantzReceiver
 import PyUSBFinder
+import WMIUSBFinder
 from optparse import OptionParser,  OptionGroup
 
 def main(argv):
@@ -10,8 +11,9 @@ def main(argv):
     hostname = args[0]
     productid = int(args[1], 0)
     vendorid = int(args[2], 0)
+    rsource = args[3]
 
-    finder = PyUSBFinder.pyusb_finder()
+    finder = WMIUSBFinder.wmiusb_finder()
     finder.enumerateall()
     while True:
         print("waiting for device")
@@ -21,7 +23,7 @@ def main(argv):
             print("power status = " + str(powerstatus))
             if powerstatus == 1:
                 print("current source = " + r.get_source())
-                r.change_source("AUX2")
+                r.change_source(rsource)
             else:
                 print("receiver is off")
             r.disconnect()
@@ -31,11 +33,11 @@ def main(argv):
     print("done")
 
 def processCommandLine(argv):
-    parser = OptionParser("ReceiverKVM <receiveraddress> <vendorid> <productid>")
+    parser = OptionParser("ReceiverKVM <receiveraddress> <vendorid> <productid> <receiversource>")
 
     options, args = parser.parse_args()
 
-    if len(args) != 3:
+    if len(args) != 4:
                 parser.print_help()
                 parser.error("invalid number of arguments")
 
