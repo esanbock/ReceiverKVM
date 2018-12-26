@@ -1,6 +1,7 @@
 import usb
 import usb.core
 import usb.util
+import time
 
 class find_class(object):
     def __init__(self, class_):
@@ -24,13 +25,26 @@ class find_class(object):
         return False
 
 class pyusb_finder(object):
-    def findbyid(self, vendor, product):
+    def find_by_id(self, vendor, product):
         dev = usb.core.find(idVendor=vendor, idProduct=product)
         if dev is None:
             return False
         return True
 
-    def enumerateall(self):
+    def enumerateall(self,poll=.2):
+        self.sleeptime=poll
         devs = usb.core.find(find_all=1)
         for result in devs:
             print(result)
+
+    def wait_for_device(self,vendor,product):
+        while True:
+            if self.find_by_id(vendor,product):
+                return True
+            time.sleep(self.sleeptime)
+
+    def wait_for_device_disappear(self,vendor,product):
+        while True:
+            if self.find_by_id(vendor,product) is False:
+                return True
+            time.sleep(self.sleeptime)
