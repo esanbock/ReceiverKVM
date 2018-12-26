@@ -8,12 +8,15 @@ def main(argv):
     finder = PyUSBFinder.pyusb_finder()
     finder.enumerateall()
     while True:
-        if finder.wait_for_device(0x1050,0x0403) is True:
+        print("waiting for device")
+        if finder.wait_for_device(0x204,0x6025) is True:
             r = MarantzReceiver.marantz_receiver("192.168.1.131")
             print("power status = " + str(r.get_power()))
             print("current source = " + r.get_source())
             r.change_source("AUX2")
-            finder.wait_for_device_disappear()
+            r.disconnect()
+            print("hanging out until device disappears")
+            finder.wait_for_device_disappear(0x204,0x6025)
 
     print("done")
 
