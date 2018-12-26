@@ -1,17 +1,20 @@
 import sys
 import MarantzReceiver
 import PyUSBFinder
-import WMIUSBFinder
 from optparse import OptionParser,  OptionGroup
+
+if sys.platform == "win32":
+    import WMIUSBFinder
 
 def main(argv):
     print("yo")
 
     options, args = processCommandLine(argv)
-    hostname = args[0]
-    productid = int(args[1], 0)
-    vendorid = int(args[2], 0)
-    rsource = args[3]
+    receivertype = args[0]
+    hostname = args[1]
+    receiversource = args[2]
+    productid = int(args[3], 0)
+    vendorid = int(args[4], 0)
 
     #if Windows, use WMI instead of PyUSB
     if sys.platform == "win32":
@@ -23,12 +26,12 @@ def main(argv):
     while True:
         print("waiting for device")
         if finder.wait_for_device(productid,vendorid) is True:
-            r = MarantzReceiver.marantz_receiver(hostname)
+            r = makeReceiver(receivertype,hostname)
             powerstatus = r.get_power()
             print("power status = " + str(powerstatus))
             if powerstatus == 1:
                 print("current source = " + r.get_source())
-                r.change_source(rsource)
+                r.change_source(receiversource)
             else:
                 print("receiver is off")
             r.disconnect()
@@ -38,15 +41,21 @@ def main(argv):
     print("done")
 
 def processCommandLine(argv):
-    parser = OptionParser("ReceiverKVM <receiveraddress> <vendorid> <productid> <receiversource>")
+    parser = OptionParser("ReceiverKVM <receivertype> <receiveraddress> <receiversource> <usbvendorid> <usbproductid> ")
 
     options, args = parser.parse_args()
 
-    if len(args) != 4:
+    if len(args) != 5:
                 parser.print_help()
                 parser.error("invalid number of arguments")
 
     return options, args
+
+def makeReceiver(type, hostname):
+    if "marantz" in type.lower():
+        return MarantzReceiver.marantz_receiver(hostname)
+
+    raise Exception("unsupported receiver type.  Must pass in marantz")
 
 if __name__ == "__main__":
     main(sys.argv)
