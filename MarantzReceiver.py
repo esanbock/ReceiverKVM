@@ -52,6 +52,8 @@ class marantz_receiver(Receiver.receiver):
             return 1
         if "PWOFF" in powerstatus[0]:
             return 0
+        if "PWSTANDBY" in powerstatus[0]:
+            return 0
 
         raise Exception("I don't understand the response")
 
