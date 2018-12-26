@@ -8,8 +8,8 @@ def main(argv):
 
     options, args = processCommandLine(argv)
     hostname = args[0]
-    productid = int(args[1],16)
-    vendorid = int(args[2],16)
+    productid = int(args[1], 0)
+    vendorid = int(args[2], 0)
 
     finder = PyUSBFinder.pyusb_finder()
     finder.enumerateall()
