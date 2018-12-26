@@ -13,7 +13,9 @@ class wmiusb_finder(USBFinder.usb_finder):
             print(item.Dependent)
 
     def find_by_id(self, vendor, product):
-        wql = "select * from Win32_PNPEntity Where deviceid Like '%USB\\VID_04f2&pid_0833%'"
+        vendorhex = format(vendor,'x')
+        producthex = format(product,'x')
+        wql = "select * from Win32_PNPEntity Where deviceid Like '%USB\\VID_" + vendorhex + "&pid_" + producthex + "%'"
         items = self.c.query(wql)
         if len(items) > 0:
             return True
