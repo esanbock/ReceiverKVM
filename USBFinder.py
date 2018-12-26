@@ -1,5 +1,7 @@
 import time
 
+# base class for usb device searching opreartions.  Currently there is a windows-specific implementation
+# using WMI and a pyusb implementation that works on Mac & Linux
 class usb_finder(object):
 
     def __init__(self):

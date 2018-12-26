@@ -3,6 +3,20 @@ import usb.core
 import usb.util
 import USBFinder
 
+# finds usb devices using pyusb.  Doesn't work on windows without a special driver
+class pyusb_finder(USBFinder.usb_finder):
+    def find_by_id(self, vendor, product):
+        dev = usb.core.find(idVendor=vendor, idProduct=product)
+        if dev is None:
+            return False
+        return True
+
+    def enumerateall(self):
+        devs = usb.core.find(find_all=1)
+        for result in devs:
+            print(result)
+
+
 class find_class(object):
     def __init__(self):
         super().__init__()
@@ -23,16 +37,3 @@ class find_class(object):
                 return True
 
         return False
-
-class pyusb_finder(USBFinder.usb_finder):
-    def find_by_id(self, vendor, product):
-        dev = usb.core.find(idVendor=vendor, idProduct=product)
-        if dev is None:
-            return False
-        return True
-
-    def enumerateall(self):
-        devs = usb.core.find(find_all=1)
-        for result in devs:
-            print(result)
-

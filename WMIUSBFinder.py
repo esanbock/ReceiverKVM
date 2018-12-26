@@ -1,6 +1,7 @@
 import USBFinder
 import wmi
 
+# this class uses WMI functionality to find the USB device.  Widnows-specific
 class wmiusb_finder(USBFinder.usb_finder):
 
     def __init__(self):

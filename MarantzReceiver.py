@@ -6,6 +6,7 @@ import socket
 
 logger = logging.getLogger(__name__)
 
+#marantz receiver support.  Must implement the  change_source and get_power functions
 class marantz_receiver(Receiver.receiver):
 
     TCP_PORT = 23
@@ -23,6 +24,37 @@ class marantz_receiver(Receiver.receiver):
 #        intro = self.receive()
 #        print(intro)
 
+    # changes the input source
+    def change_source(self, source):
+        print("changing source to " + source)
+        self.send("SI" + source)
+
+    #return 1 or 0 depending on the power state of the receiver.  The script ignores receivers that are turned off or in standby
+    def get_power(self):
+        self.send('PW?')
+        powerstatus = self.receive()
+        print(powerstatus)
+        if "PWON" in powerstatus[0]:
+            return 1
+        if "PWOFF" in powerstatus[0]:
+            return 0
+        if "PWSTANDBY" in powerstatus[0]:
+            return 0
+
+        raise Exception("I don't understand the response")
+
+    # retrieves the current input source of the receiver
+    def get_source(self):
+        self.send("SI?")
+        source = self.receive()
+        return source[0]
+
+    # in this cas, it just closes the socket connection
+    def disconnect(self):
+        self.conn.close()
+
+
+    #this code was copied from another github marantz command implementation.  TODO:  revisit
     def send(self, cmd):
         cmd = cmd.rstrip(self.LINE_TERMINATOR) + self.LINE_TERMINATOR
         send_data = bytes(cmd, 'ascii')
@@ -40,27 +72,3 @@ class marantz_receiver(Receiver.receiver):
         print("parsed " + data)
         return [line.strip() for line in data.split(self.LINE_TERMINATOR)]
 
-    def change_source(self, source):
-        print("changing source to " + source)
-        self.send("SI" + source)
-
-    def get_power(self):
-        self.send('PW?')
-        powerstatus = self.receive()
-        print(powerstatus)
-        if "PWON" in powerstatus[0]:
-            return 1
-        if "PWOFF" in powerstatus[0]:
-            return 0
-        if "PWSTANDBY" in powerstatus[0]:
-            return 0
-
-        raise Exception("I don't understand the response")
-
-    def get_source(self):
-        self.send("SI?")
-        source = self.receive()
-        return source[0]
-
-    def disconnect(self):
-        self.conn.close()

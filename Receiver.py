@@ -1,3 +1,5 @@
+
+# this is the receiver base class.  not yet needed to make your own receiver class
 class receiver:
 
     def __init__(self, ip):

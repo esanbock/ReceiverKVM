@@ -22,9 +22,14 @@ def main(argv):
     else:
         finder = PyUSBFinder.pyusb_finder()
 
+    # dump all devices.  Informational, should probably be its own command line parameter
     finder.enumerateall()
+
+    # Wait for the USB trigger device to appear (KVM switch to me), check the power status
+    # to make sure that the receiver is on.  If so, change the receiver source
+    # If this is successful, then wait for the device to disappear (KVM switch away)  and start again
     while True:
-        print("waiting for device")
+        print("waiting for device to appear")
         if finder.wait_for_device(productid,vendorid) is True:
             r = makeReceiver(receivertype,hostname)
             powerstatus = r.get_power()
@@ -37,8 +42,6 @@ def main(argv):
             r.disconnect()
             print("hanging out until device disappears")
             finder.wait_for_device_disappear(productid,vendorid)
-
-    print("done")
 
 def processCommandLine(argv):
     parser = OptionParser("ReceiverKVM <receivertype> <receiveraddress> <receiversource> <usbvendorid> <usbproductid> ")
