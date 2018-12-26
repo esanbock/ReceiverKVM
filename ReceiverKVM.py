@@ -13,7 +13,12 @@ def main(argv):
     vendorid = int(args[2], 0)
     rsource = args[3]
 
-    finder = WMIUSBFinder.wmiusb_finder()
+    #if Windows, use WMI instead of PyUSB
+    if sys.platform == "win32":
+        finder = WMIUSBFinder.wmiusb_finder()
+    else:
+        finder = PyUSBFinder.pyusb_finder()
+
     finder.enumerateall()
     while True:
         print("waiting for device")
