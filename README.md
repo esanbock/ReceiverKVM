@@ -9,4 +9,4 @@ Turn an a/v receiver and a USB-switch into a KVM.  All of the high-end A/V featu
 
 where 0x4f2 and 0x0833 are manufacturer and product IDs of the USB device that you want to trigger the switch.  In this case, I'm using an Amazon Basics keyboard.  To find these identefiers use lsusb in linux.
 
-Any time the KVM switches to another source, the device that sees the keyboard (or your chosen device) will connect to the receiver and change the video & audio source so that you don't have to push two buttons, like a complete savage.
+Any time the KVM switches to another source, the computer that sees the keyboard (or your chosen device) will connect to the receiver and change the video & audio source so that you don't have to push two buttons, like a complete savage.
